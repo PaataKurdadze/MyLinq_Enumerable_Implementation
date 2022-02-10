@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using _2_Linq_Implementation.Extensions;
+using _2_Linq_Implementation;
 //using System.Linq;
 
 namespace _2_Linq_Implementation
@@ -32,11 +32,11 @@ namespace _2_Linq_Implementation
             int[] x = { 1, 2, 3, 4, 5, 4, 1, 7 };
             int[] y = { 4, 5, 4, 6, 7, 8 };
 
-            //var v = x.Count();
+            var v = x.Count();
             //var z = x.Reverse();
 
             var union = x.Union(y);
-            //var except = x.Except(y);
+            var except = x.Except(y);
             //var intersect = x.Intersect(y);
             //var concat = x.Concat(y);
 

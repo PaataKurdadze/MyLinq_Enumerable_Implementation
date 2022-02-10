@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 
 
-namespace _2_Linq_Implementation.Extensions
+namespace _2_Linq_Implementation
 {
     internal static class MyLinq
     {
@@ -26,7 +26,7 @@ namespace _2_Linq_Implementation.Extensions
             foreach (var item in source)
                 yield return selector(item);
         }
-        
+
         public static IEnumerable<TResult> Select<TSource, TResult>(
             this IEnumerable<TSource> source, Func<TSource, int, TResult> selector)
         {
@@ -44,7 +44,7 @@ namespace _2_Linq_Implementation.Extensions
         public static IEnumerable<T> Distinct<T>(this IEnumerable<T> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            
+
             return new HashSet<T>(source);
         }
 
@@ -56,11 +56,11 @@ namespace _2_Linq_Implementation.Extensions
             HashSet<T> set = new(first);
 
             IEnumerator<T> e = second.GetEnumerator();
-            while (e.MoveNext()) 
+            while (e.MoveNext())
                 set.Add(e.Current);
-            
+
             return set;
-            
+
             //Or
             //return new HashSet<T>(System.Linq.Enumerable.Concat(first, second));
         }
@@ -69,7 +69,7 @@ namespace _2_Linq_Implementation.Extensions
         {
             if (first == null) throw new ArgumentNullException(nameof(first));
             if (second == null) throw new ArgumentNullException(nameof(second));
-            
+
             HashSet<T> set = new(first);
 
             foreach (var itemSecond in second)
@@ -94,10 +94,10 @@ namespace _2_Linq_Implementation.Extensions
             if (first == null) throw new ArgumentNullException(nameof(first));
             if (second == null) throw new ArgumentNullException(nameof(second));
 
-            foreach (var item in first) 
+            foreach (var item in first)
                 yield return item;
-            
-            foreach (var item in second) 
+
+            foreach (var item in second)
                 yield return item;
         }
 
@@ -105,7 +105,7 @@ namespace _2_Linq_Implementation.Extensions
         {
             if (source.Count() > 1) throw new InvalidOperationException(nameof(source));
             if (source == null) throw new ArgumentNullException(nameof(source));
-            
+
             return source.SingleOrDefault();
         }
 
@@ -160,11 +160,11 @@ namespace _2_Linq_Implementation.Extensions
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             return source.FirstOrDefault();
-            
+
             //Or
             //return System.Linq.Enumerable.First(source);
         }
-        
+
         public static T FirstOrDefault<T>(this IEnumerable<T> source)
         {
             if (source.Count() == 0) return default;
@@ -174,16 +174,17 @@ namespace _2_Linq_Implementation.Extensions
             if (e.MoveNext()) return e.Current;
 
             return default;
-            
+
             //Or
             //return System.Linq.Enumerable.FirstOrDefault(source);
         }
-        
-        public static T FirstOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
+
+        public static T FirstOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            foreach (var item in source) 
+            foreach (var item in source)
                 if (predicate(item)) return item;
 
             return default;
@@ -203,23 +204,26 @@ namespace _2_Linq_Implementation.Extensions
 
             IEnumerator<T> e = source.GetEnumerator();
             if (!e.MoveNext()) return default;
-            
+
             T result;
             do
                 result = e.Current;
             while (e.MoveNext());
             return result;
         }
-        
-        public static T LastOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
+
+        public static T LastOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             object returnValue = null;
             bool foundLast = false;
 
-            foreach (var item in source) {
-                if (predicate(item)) {
+            foreach (var item in source)
+            {
+                if (predicate(item))
+                {
                     foundLast = true;
                     returnValue = item;
                 }
@@ -267,7 +271,7 @@ namespace _2_Linq_Implementation.Extensions
         public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> source, int count)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            
+
             return count <= 0 ?
                 System.Linq.Enumerable.Empty<T>() :
                 TakeLastIterator(source, count);
@@ -278,7 +282,7 @@ namespace _2_Linq_Implementation.Extensions
             Queue<TSource> queue;
             using (IEnumerator<TSource> e = source.GetEnumerator())
             {
-                if (!e.MoveNext()) yield break; 
+                if (!e.MoveNext()) yield break;
 
                 queue = new Queue<TSource>();
                 queue.Enqueue(e.Current);
@@ -301,7 +305,7 @@ namespace _2_Linq_Implementation.Extensions
                     }
                 }
             }
-            
+
             do
             {
                 yield return queue.Dequeue();
@@ -358,13 +362,13 @@ namespace _2_Linq_Implementation.Extensions
 
         public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source, int count)
         {
-            if (source == null ) throw new ArgumentNullException(nameof(source));
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             return count <= 0 ?
                 source.Skip(0) :
                 SkipLastIterator(source, count);
         }
-        
+
         private static IEnumerable<TSource> SkipLastIterator<TSource>(IEnumerable<TSource> source, int count)
         {
             var queue = new Queue<TSource>();
@@ -390,10 +394,10 @@ namespace _2_Linq_Implementation.Extensions
                 }
             }
         }
-        
+
         public static IEnumerable<T> Skip<T>(this IEnumerable<T> source, int count)
         {
-            if (source == null ) throw new ArgumentNullException(nameof(source));
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             var e = source.GetEnumerator();
             for (int i = 0; e.MoveNext(); i++)
@@ -436,7 +440,7 @@ namespace _2_Linq_Implementation.Extensions
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            
+
             int count = 0;
             foreach (var item in source)
                 if (predicate(item)) count++;
